@@ -1,7 +1,3 @@
-# TODO load balancer
-# TODO load balancer security group
-# TODO target group with health check
-
 resource "aws_security_group" "magic8_lb_sg" {
   name        = "magic8_lb_sg"
   vpc_id      = aws_vpc.magic.id
@@ -13,6 +9,13 @@ resource "aws_security_group" "magic8_lb_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  egress {
+    from_port = 8080
+    to_port = 8080
+    protocol = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
 }
 
 resource "aws_lb" "magic8" {
@@ -20,6 +23,7 @@ resource "aws_lb" "magic8" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.magic8_lb_sg.id]
+  subnets            = [aws_subnet.one.id, aws_subnet.two.id]
 }
 
 resource "aws_lb_target_group" "magic8_tg" {
