@@ -15,6 +15,7 @@ source "amazon-ebs" "ubu-ami" {
       name                = "ubuntu-with-go-*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
+      state               = "available"
     }
     most_recent = true
     owners      = ["514698705445"]
