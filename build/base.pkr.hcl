@@ -9,9 +9,9 @@ packer {
 source "amazon-ebs" "ubu-ami" {
   ami_name      = "ubuntu-with-go-{{timestamp}}"
   instance_type = "t2.micro"
-  region        = "us-west-2"
-  source_ami = "ami-0c033eb565588ae0e" # Official Ubunutu 22.04 "jammy"
-  ssh_username = "ubuntu"
+  region        = "us-west-1"
+  source_ami    = "ami-0a1069756c2859f0b" # Official Ubunutu 22.04 "jammy"
+  ssh_username  = "ubuntu"
 }
 
 build {

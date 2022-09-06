@@ -6,12 +6,12 @@ packer {
     }
     git = {
       version = ">= 0.3.2"
-      source = "github.com/ethanmdavidson/git"
+      source  = "github.com/ethanmdavidson/git"
     }
   }
 }
 
-data "git-commit" "cwd-head" { }
+data "git-commit" "cwd-head" {}
 
 locals {
   truncated_sha = substr(data.git-commit.cwd-head.hash, 0, 8)
@@ -20,7 +20,7 @@ locals {
 source "amazon-ebs" "ubu-ami" {
   ami_name      = "magic8-image-{{timestamp}}"
   instance_type = "t2.micro"
-  region        = "us-west-2"
+  region        = "us-west-1"
   source_ami_filter {
     filters = {
       name                = "ubuntu-with-go-*"
@@ -35,7 +35,7 @@ source "amazon-ebs" "ubu-ami" {
 }
 
 source "docker" "ubu-img" {
-  image = "golang:bullseye"
+  image  = "golang:bullseye"
   commit = true
   changes = [
     "WORKDIR /tmp/magic",
@@ -56,25 +56,25 @@ build {
   }
 
   provisioner "file" {
-    source = "../src/main.go"
+    source      = "../src/main.go"
     destination = "/tmp/magic/main.go"
   }
 
   provisioner "file" {
-    only = ["docker.ubu-img"]
-    content = "export VERSION=${local.truncated_sha}"
+    only        = ["docker.ubu-img"]
+    content     = "export VERSION=${local.truncated_sha}"
     destination = "/tmp/magic/magic.env"
   }
 
   provisioner "file" {
-    only = ["amazon-ebs.ubu-ami"]
-    content = "VERSION=${local.truncated_sha}"
+    only        = ["amazon-ebs.ubu-ami"]
+    content     = "VERSION=${local.truncated_sha}"
     destination = "/tmp/magic/magic.env"
   }
 
   provisioner "file" {
-    only = ["amazon-ebs.ubu-ami"]
-    source = "magic.service"
+    only        = ["amazon-ebs.ubu-ami"]
+    source      = "magic.service"
     destination = "/tmp/magic/magic.service"
   }
 
@@ -91,9 +91,9 @@ build {
 
   post-processors {
     post-processor "docker-tag" {
-      only = ["docker.ubu-img"]
+      only       = ["docker.ubu-img"]
       repository = "frenata/magic"
-      tags = ["latest"]
+      tags       = ["latest"]
     }
     post-processor "shell-local" {
       only = ["docker.ubu-img"]
