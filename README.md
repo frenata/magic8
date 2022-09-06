@@ -16,9 +16,4 @@ Finally, in the exact same build script as we use for prod, there's a developmen
 
 ## TODO
 
-  * specify the necessary infra as code
-    * launch template
-    * autoscaling group
-    * security groups
-    * load balancer and target group
   * specify a codedeploy application so that the prod artifact is built and deployed on pushes
