@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-west-2"
+  region = "us-west-1"
 }
 
 resource "aws_vpc" "magic" {
@@ -11,13 +11,13 @@ resource "aws_internet_gateway" "gw" {
 }
 
 resource "aws_subnet" "magic_sub" {
-  vpc_id                  = aws_vpc.ctf.id
+  vpc_id                  = aws_vpc.magic.id
   cidr_block              = "172.31.64.0/20"
   map_public_ip_on_launch = false
 }
 
 resource "aws_route_table" "r" {
-  vpc_id = aws_vpc.ctf.id
+  vpc_id = aws_vpc.magic.id
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.gw.id
