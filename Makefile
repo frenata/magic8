@@ -1,4 +1,4 @@
-all: base 
+all:
 	packer build build.pkr.hcl
 
 dev:
