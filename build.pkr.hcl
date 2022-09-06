@@ -4,8 +4,19 @@ packer {
       version = ">= 0.0.2"
       source  = "github.com/hashicorp/amazon"
     }
+    git = {
+      version = ">= 0.3.2"
+      source = "github.com/ethanmdavidson/git"
+    }
   }
 }
+
+data "git-commit" "cwd-head" { }
+
+locals {
+  truncated_sha = substr(data.git-commit.cwd-head.hash, 0, 8)
+}
+
 source "amazon-ebs" "ubu-ami" {
   ami_name      = "magic8-image-{{timestamp}}"
   instance_type = "t2.micro"
@@ -29,7 +40,7 @@ source "docker" "ubu-img" {
   changes = [
     "WORKDIR /tmp/magic",
     "EXPOSE 8080",
-    "CMD go run /tmp/magic/main.go;",
+    "CMD . /tmp/magic/magic.env && go run /tmp/magic/main.go;",
     "ENTRYPOINT [\"\"]"
   ]
 }
@@ -50,6 +61,18 @@ build {
   }
 
   provisioner "file" {
+    only = ["docker.ubu-img"]
+    content = "export VERSION=${local.truncated_sha}"
+    destination = "/tmp/magic/magic.env"
+  }
+
+  provisioner "file" {
+    only = ["amazon-ebs.ubu-ami"]
+    content = "VERSION=${local.truncated_sha}"
+    destination = "/tmp/magic/magic.env"
+  }
+
+  provisioner "file" {
     only = ["amazon-ebs.ubu-ami"]
     source = "magic.service"
     destination = "/tmp/magic/magic.service"
@@ -61,6 +84,7 @@ build {
       "sudo cp /tmp/magic/magic.service /etc/systemd/system/magic.service",
       "sudo mkdir /opt/magic",
       "sudo cp /tmp/magic/main.go /opt/magic/main.go",
+      "sudo cp /tmp/magic/magic.env /opt/magic/magic.env",
       "sudo systemctl enable magic.service"
     ]
   }
