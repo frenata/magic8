@@ -1,3 +1,5 @@
+set -eu
+
 old_version=$(aws ec2 describe-launch-template-versions --launch-template-name magic8 | jq ".LaunchTemplateVersions[0].VersionNumber")
 echo The old template version is: $old_version
 out=$(aws ec2 create-launch-template-version --launch-template-name magic8 --source-version $old_version --launch-template-data "{\"ImageId\": \"$1\"}")
