@@ -11,10 +11,10 @@ resource "aws_security_group" "magic8_lb_sg" {
   }
 
   egress {
-    from_port = 8080
-    to_port = 8080
-    protocol = "tcp"
-    cidr_blocks = ["10.0.0.0/16"]
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/16"] # NOTE: CIDR here to avoid security group cycles
   }
 }
 

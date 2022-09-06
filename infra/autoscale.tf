@@ -4,17 +4,17 @@ resource "aws_security_group" "magic8_sg" {
   description = "allowed ports for instances"
 
   ingress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
     security_groups = [aws_security_group.magic8_lb_sg.id]
   }
 }
 
 resource "aws_launch_template" "magic8" {
-  image_id = "ami-0a1069756c2859f0b"
+  image_id = "ami-0a1069756c2859f0b" # NOTE a base ubuntu AMI, will be replaced ASAP with an app AMI
   name     = "magic8-lt"
-  key_name = "magic8"
+  key_name = "magic8" # NOTE Assumes you've already created this keypair
 
   block_device_mappings {
     device_name = "/dev/sda1"
@@ -24,10 +24,9 @@ resource "aws_launch_template" "magic8" {
     }
   }
   instance_type = "t2.micro"
-  # vpc_security_group_ids = [aws_security_group.magic8_sg.id]
 
   network_interfaces {
-    associate_public_ip_address = true
+    associate_public_ip_address = false
     security_groups             = [aws_security_group.magic8_sg.id]
   }
 
