@@ -3,6 +3,10 @@ Description=Magic 8 Ball
 
 [Service]
 ExecStart=go run /opt/magic/main.go
+Type=simple
+Restart=always
+RestartSec=3
+User=ubuntu
 
 [Install]
 WantedBy=multi-user.target
