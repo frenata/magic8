@@ -9,3 +9,7 @@ prod:
 
 base:
 	cd build && packer build base.pkr.hcl
+
+init:
+	cd build && packer init
+	cd terraform && terraform init
