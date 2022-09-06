@@ -1,0 +1,8 @@
+[Unit]
+Description=Magic 8 Ball
+
+[Service]
+ExecStart=go run /opt/magic/main.go
+
+[Install]
+WantedBy=multi-user.target
