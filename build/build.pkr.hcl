@@ -56,7 +56,7 @@ build {
   }
 
   provisioner "file" {
-    source = "main.go"
+    source = "../src/main.go"
     destination = "/tmp/magic/main.go"
   }
 
